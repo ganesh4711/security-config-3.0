@@ -1,7 +1,7 @@
-package com.javatechie.config;
+package com.demo.config;
 
-import com.javatechie.entity.UserInfo;
-import com.javatechie.repository.UserInfoRepository;
+import com.demo.entity.User;
+import com.demo.repository.UserInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,7 +18,7 @@ public class UserInfoUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserInfo> userInfo = repository.findByName(username);
+        Optional<User> userInfo = repository.findById(Integer.valueOf(username));
         return userInfo.map(UserInfoUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException("user not found " + username));
 

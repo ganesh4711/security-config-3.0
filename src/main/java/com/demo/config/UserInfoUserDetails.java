@@ -1,28 +1,28 @@
-package com.javatechie.config;
+package com.demo.config;
 
-import com.javatechie.entity.UserInfo;
+
+import com.demo.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class UserInfoUserDetails implements UserDetails {
 
+    private final Integer name;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
-    private String name;
-    private String password;
-    private List<GrantedAuthority> authorities;
-
-    public UserInfoUserDetails(UserInfo userInfo) {
-        name=userInfo.getName();
+    public UserInfoUserDetails(User userInfo) {
+        name=userInfo.getId();
         password=userInfo.getPassword();
-        authorities= Arrays.stream(userInfo.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        authorities=
+                userInfo.getUserRoles().stream()
+                        .map(userRole -> new SimpleGrantedAuthority(userRole.getRole().getRoleName()))
+                        .collect(Collectors.toList());
     }
 
     @Override
@@ -37,7 +37,7 @@ public class UserInfoUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return name;
+        return String.valueOf(name);
     }
 
     @Override
